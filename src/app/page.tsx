@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import React from 'react';
 import { useState, useRef } from 'react';
 
@@ -8,37 +8,47 @@ export default function Home() {
   const [selectedPerson, setSelectedPerson] = useState("")
   const [parkingLotPeople, setParkingLotPeople] = useState([])
   const [parkingLotMode, setParkingLotMode] = useState(false)
-  
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-     <div>
-      <h1>STAND UP TIME!</h1>
-     </div>
-    
-    {nextCodeFreeze()}
-    {nextRelease()}
+    <main>
+      <div className="flex items-center justify-center h-10">
+        <h1>STAND UP TIME!</h1>
+      </div>
 
-    <div>
-      <h1>People who need to Stand Up</h1>
-      <ul>
-        {standupPeople.map(person => <li key={`standup-${person}`}>{person}</li>)}
-      </ul>
-    </div>
+      <div className="flex mb-4">
+        <div className="w-3/5 h-5">
+          {nextCodeFreeze()}
+          {nextRelease()}
+        </div>
 
-    <div>
-      <h1>Parking Lot Participants</h1>
-      <ul>
-        {parkingLotPeople.map(person => <li key={`standup-${person}`}>{person}</li>)}
-      </ul>
-    </div>
-    {getCurrentText()}
+        <div className="w-1/5 h-15">
+          <h1>People who need to Stand Up</h1>
+          <ul>
+            {standupPeople.map(person => <li key={`standup-${person}`}>{person}</li>)}
+          </ul>
+        </div>
 
-    {personButton()}
+        <div className="w-1/5 h-15">
+          <h1>Parking Lot Participants</h1>
+          <ul>
+            {parkingLotPeople.map(person => <li key={`standup-${person}`}>{person}</li>)}
+          </ul>
+        </div>
+      </div>
 
-    { 
-      selectedPerson && !parkingLotMode &&
-      <button onClick={addToParkingLot}>Has Parking Lot Topic</button>
-    }
+      <div className="flex items-center justify-center h-40">
+        {getCurrentText()}
+      </div>
+
+      <div className="flex items-center justify-center h-2">
+        <div className="inline-flex">
+          {personButton()}
+          {
+            selectedPerson && !parkingLotMode &&
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r" onClick={addToParkingLot}>Has Parking Lot Topic</button>
+          }
+        </div>
+      </div>
     </main>
   )
 
@@ -89,14 +99,16 @@ export default function Home() {
     }
 
   function personButton() {
+
+
     if (selectedPerson && standupPeople.length > 0) {
-      return <button onClick={nextPerson}>Next</button>
+      return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Next</button>
     }
     else if(parkingLotPeople.length > 0) {
-      return <button onClick={nextPerson}>Go into the Parking Lot</button>
+      return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Go into the Parking Lot</button>
     }
     else{
-      return <button onClick={nextPerson}>Start Standup</button>
+      return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Start Standup</button>
     }
   }
 
@@ -117,7 +129,7 @@ export default function Home() {
     const today = new Date()
     const previousRelease = new Date("2023-09-27")
     const daysUntilNextRelease = 14 - (daysBetweenDates(previousRelease, today) % 14)
-    return (<h2>Next Release is in <b>{daysUntilNextRelease} days</b></h2>) 
+    return (<h2>Next Release is in <b>{daysUntilNextRelease} days</b></h2>)
   }
 
   function daysBetweenDates(d1, d2) {
