@@ -8,7 +8,9 @@ export default function Home() {
   const [selectedPerson, setSelectedPerson] = useState("")
   const [parkingLotPeople, setParkingLotPeople] = useState([])
   const [parkingLotMode, setParkingLotMode] = useState(false)
-
+  const [startStandup, setStartStandup] = useState(true)
+  const [standupIndexToRemove, setStandupIndexToRemove] = useState(null)
+  const [parkingLotIndexToRemove, setParkingLotIndexToRemove] = useState(null)
   return (
     <main>
       <div className="flex items-center justify-center h-10">
@@ -54,22 +56,34 @@ export default function Home() {
 
 
   function nextPerson() {
-    if (standupPeople.length > 0) {
-    const standupPeopleCopy = standupPeople
-    const randomIndex = Math.floor(Math.random() * standupPeopleCopy.length)
-    const person = standupPeopleCopy.splice(randomIndex, 1)
-    setSelectedPerson(person)
-    setStandupPeople(standupPeopleCopy)
+    setStartStandup(false)
+    const standupCopy = standupPeople
+    const parkingLotCopy = parkingLotPeople
+
+    if (standupIndexToRemove != null){
+      standupCopy.splice(standupIndexToRemove, 1)
+      setStandupPeople(standupCopy)
+      setStandupIndexToRemove(null)
+    }
+    else if (parkingLotIndexToRemove != null){
+      parkingLotCopy.splice(parkingLotIndexToRemove, 1)
+      setParkingLotPeople(parkingLotCopy)
+      setParkingLotIndexToRemove(null)
     }
 
-    else if (parkingLotPeople.length > 0) {
-      const parkingLotPeopleCopy = parkingLotPeople
-      const randomIndex = Math.floor(Math.random() * parkingLotPeopleCopy.length)
-      const person = parkingLotPeople.splice(randomIndex, 1)
+    if (standupCopy.length > 0) {
+    const randomIndex = Math.floor(Math.random() * standupCopy.length)
+    setStandupIndexToRemove(randomIndex)
+    const person = standupCopy[randomIndex]
+    setSelectedPerson(person)
+    }
 
+    else if (parkingLotCopy.length > 0) {
+      const randomIndex = Math.floor(Math.random() * parkingLotCopy.length)
+      const person = parkingLotCopy[randomIndex]
       setSelectedPerson(person)
-      setStandupPeople(parkingLotPeopleCopy)
       setParkingLotMode(true)
+      setParkingLotIndexToRemove(randomIndex)
     }
     else {
       setParkingLotMode(false)
@@ -99,16 +113,17 @@ export default function Home() {
     }
 
   function personButton() {
-
-
-    if (selectedPerson && standupPeople.length > 0) {
+    if (selectedPerson && (standupPeople.length > 0 || (parkingLotMode && parkingLotPeople.length > 0))) {
       return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Next</button>
     }
-    else if(parkingLotPeople.length > 0) {
+    else if(parkingLotPeople.length > 1) {
       return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Go into the Parking Lot</button>
     }
-    else{
+    else if(startStandup){
       return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={nextPerson}>Start Standup</button>
+    }
+    else{
+      return <button className={"bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"} onClick={finishStandup}>Finish Standup</button>
     }
   }
 
@@ -136,5 +151,12 @@ export default function Home() {
     const timeDifference = d2.getTime() - d1.getTime();
     const dayDifference = timeDifference / (1000 * 3600 * 24)
     return Math.floor(dayDifference)
+  }
+
+  function finishStandup(){
+    setParkingLotPeople([])
+    setStandupPeople([])
+    setSelectedPerson("")
+    setParkingLotMode(false)
   }
 }
