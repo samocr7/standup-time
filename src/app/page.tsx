@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 
 
 export default function Home() {
-  const [standupPeople, setStandupPeople] = useState(["Sam", "Sam2", "Sam3", "Sam4", "Sam5", "Sam6"])
+  const [standupPeople, setStandupPeople] = useState(["Martin", "Denny", "Sam", "Georgi", "Harsweet", "Jaela", "John", "Michelle", "Mike", "Nick", "Seyed", "Eric", "Volod"])
   const [selectedPerson, setSelectedPerson] = useState("")
   const [parkingLotPeople, setParkingLotPeople] = useState([])
   const [parkingLotMode, setParkingLotMode] = useState(false)
@@ -39,6 +39,10 @@ export default function Home() {
       </div>
 
       <div className="flex items-center justify-center h-40">
+        {getStandupQuestions()}
+      </div>
+
+      <div className="flex items-center justify-center h-40 text-2xl">
         {getCurrentText()}
       </div>
 
@@ -97,8 +101,21 @@ export default function Home() {
     setParkingLotPeople([...parkingLotPeople, selectedPerson])
   }
 
+  function getStandupQuestions() {
+    if (!parkingLotMode && !startStandup && standupPeople.length > 0) {
+      return (
+      <div className="items-center justify-center h-10">
+        <h1>Update us on...</h1>
+        <br></br>
+        <h2>Pick a turtle 🐢</h2>
+        <h2>How did yesterday go?</h2>
+        <h2>What's the plan for today?</h2>
+      </div>
+      )
+    }
+  }
+
   function getCurrentText() {
-    const day = getDayOfTheWeek()
     if (standupPeople.length > 0) {
       if (selectedPerson) {
         return ( <h2>It is your turn <b>{selectedPerson}</b>!</h2> )
@@ -108,6 +125,7 @@ export default function Home() {
           return ( <h2><b>{selectedPerson}</b> has a topic for Parking Lot</h2> )
     }
     else if (parkingLotPeople.length == 0 && standupPeople.length == 0) {
+        const day = getDayOfTheWeek()
         return ( <h2>All done! Have a great {day}! </h2>)
       }
     }
